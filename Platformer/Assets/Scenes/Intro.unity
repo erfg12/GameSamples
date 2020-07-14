@@ -236,8 +236,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015259, y: 151.04}
-  m_SizeDelta: {x: 1393.9185, y: 302.07117}
+  m_AnchoredPosition: {x: 0.000015259, y: 215.1}
+  m_SizeDelta: {x: 1393.9185, y: 173.92938}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &97797071
 MonoBehaviour:
@@ -274,10 +274,7 @@ MonoBehaviour:
     m_LineSpacing: 1.2
   m_Text: 'HOW TO PLAY:
 
-    Arrow Keys or WASD to move and jump.
-
-    CTRL to fire
-    magic missiles.'
+    Arrow Keys or WASD to move and jump.'
 --- !u!222 &97797072
 CanvasRenderer:
   m_ObjectHideFlags: 0
