@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     Vector2 end2;
     private bool FallingToDeath = false;
     float step;
+    bool freeze = false;
 
     // Start is called before the first frame update
     void Start()
@@ -74,52 +75,56 @@ public class Player : MonoBehaviour
             return;
         }
 
-        dirX = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime;
-        dirY = Input.GetAxisRaw("Vertical") * jumpSpeed * Time.deltaTime;
+        if (!freeze){
 
-        // point me in the right direction
-        if (gameObject.activeInHierarchy && update < 0.1f)
-        {
-            dirX = 0.01f;
+            dirX = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime;
+            dirY = Input.GetAxisRaw("Vertical") * jumpSpeed * Time.deltaTime;
+
+            // point me in the right direction
+            if (gameObject.activeInHierarchy && update < 0.1f)
+            {
+                dirX = 0.01f;
+            }
+
+            start1 = transform.position + new Vector3(-0.35f, -0.6f, 0);
+            end1 = transform.position + new Vector3(-0.35f, 0.8f, 0);
+            start2 = transform.position + new Vector3(0.38f, -0.6f, 0);
+            end2 = transform.position + new Vector3(0.38f, 0.8f, 0);
+
+            if (dirY > 0 && animator.GetBool("isGrounded"))
+                r2d2.velocity = new Vector2(r2d2.velocity.x, jumpSpeed);
+
+            transform.position = new Vector2(transform.position.x + dirX, transform.position.y);
+
+            if (dirX != 0f)
+            {
+                animator.SetBool("isWalking", true);
+            }
+            else
+            {
+                animator.SetBool("isWalking", false);
+            }
+
+            if ((Input.GetAxisRaw("Vertical") > 0f) && !animator.GetBool("isGrounded"))
+            {
+                animator.SetBool("isJumping", true);
+            }
+            else
+            {
+                animator.SetBool("isJumping", false);
+            }
+
+        
+            if (dirX > 0)
+                directionX = -3;
+            else if (dirX < 0)
+                directionX = 3;
+
+            Vector3 ls = transform.localScale;
+            ls.x = directionX;
+            ls.y = directionY;
+            transform.localScale = ls;
         }
-
-        start1 = transform.position + new Vector3(-0.35f, -0.6f, 0);
-        end1 = transform.position + new Vector3(-0.35f, 0.8f, 0);
-        start2 = transform.position + new Vector3(0.38f, -0.6f, 0);
-        end2 = transform.position + new Vector3(0.38f, 0.8f, 0);
-
-        if (dirY > 0 && animator.GetBool("isGrounded"))
-            r2d2.velocity = new Vector2(r2d2.velocity.x, jumpSpeed);
-
-        transform.position = new Vector2(transform.position.x + dirX, transform.position.y);
-
-        if (dirX != 0f)
-        {
-            animator.SetBool("isWalking", true);
-        }
-        else
-        {
-            animator.SetBool("isWalking", false);
-        }
-
-        if ((Input.GetAxisRaw("Vertical") > 0f) && !animator.GetBool("isGrounded"))
-        {
-            animator.SetBool("isJumping", true);
-        }
-        else
-        {
-            animator.SetBool("isJumping", false);
-        }
-
-        if (dirX > 0)
-            directionX = -3;
-        else if (dirX < 0)
-            directionX = 3;
-
-        Vector3 ls = transform.localScale;
-        ls.x = directionX;
-        ls.y = directionY;
-        transform.localScale = ls;
 
         // check if we're falling
         if (currentheight < previousheight)
@@ -161,6 +166,7 @@ public class Player : MonoBehaviour
         Debug.Log("Player has been hit!");
         AudioSource.PlayClipAtPoint(AudioDeath, transform.position);
         animator.SetBool("isHit",true);
+        freeze = true;
         //Invincibility = 0;
         StartCoroutine(ReloadLVL());
     }
@@ -175,6 +181,7 @@ public class Player : MonoBehaviour
             animator.SetBool("isHit",false);
             transform.position = PlayerStats.respawn;
             Debug.Log("respawning at coordinates " + PlayerStats.respawn);
+            freeze = false;
         }
         FallingToDeath = false;
     }
